@@ -64,7 +64,8 @@ MAIL_FROM_ADDRESS="hello@sidequestkitchens.com"
 MAIL_FROM_NAME="\${APP_NAME}"
 EOF
 
-chmod 600 .env
+# Readable by www-data inside the app container (.env is bind-mounted)
+chmod 644 .env
 echo "Secrets fetched and .env created"
 
 echo "Stopping existing containers..."
@@ -95,8 +96,8 @@ docker compose -f docker-compose.prod.yml exec -T app php artisan route:cache
 docker compose -f docker-compose.prod.yml exec -T app php artisan view:cache
 
 echo "Setting permissions..."
-docker compose -f docker-compose.prod.yml exec -T app chown -R www-data:www-data /var/www/storage
-docker compose -f docker-compose.prod.yml exec -T app chmod -R 775 /var/www/storage
+docker compose -f docker-compose.prod.yml exec -u root -T app chown -R www-data:www-data /var/www/storage
+docker compose -f docker-compose.prod.yml exec -u root -T app chmod -R 775 /var/www/storage
 
 echo "Running health check..."
 sleep 5
