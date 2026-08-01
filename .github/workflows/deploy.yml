@@ -77,10 +77,10 @@ jobs:
 
       - name: Notify on success
         if: success()
-        run: echo "✓ Deployment completed successfully"
+        run: echo "Deployment completed successfully"
 
       - name: Notify on failure
         if: failure()
         run: |
-          echo "✗ Deployment failed"
+          echo "Deployment failed"
           exit 1

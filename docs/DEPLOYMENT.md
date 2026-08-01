@@ -22,13 +22,34 @@ Ensure the EC2 instance role allows `ssm:GetParameter` on these names.
 
 ## GitHub Actions
 
-Repository **Settings → Environments → production** — environment secrets:
+Workflows (same pattern as Skaldic Codeworks):
 
-- `AWS_EC2_HOST`
-- `AWS_EC2_USER`
-- `AWS_EC2_SSH_KEY`
+| Workflow | Trigger | What it does |
+|----------|---------|----------------|
+| `.github/workflows/test.yml` | PRs to `main` / `develop` | Composer, npm build, Pest (`php artisan test`), production Docker build |
+| `.github/workflows/deploy.yml` | Push to `main` or manual | Runs tests, then SSH deploy via `scripts/deploy.sh`, health-checks `https://sidequestkitchens.com` |
 
-(Optional: set environment URL to `https://sidequestkitchens.com`.)
+### Environment secrets
+
+Repository **Settings → Environments → production** (create the environment if needed). Add:
+
+| Secret | Value |
+|--------|--------|
+| `AWS_EC2_HOST` | Sidequest Elastic IP (e.g. `3.208.129.139`) |
+| `AWS_EC2_USER` | `ubuntu` |
+| `AWS_EC2_SSH_KEY` | Full contents of `~/.ssh/sidequest-kitchen-prod.pem` (including `BEGIN`/`END` lines) |
+
+Set the environment URL to `https://sidequestkitchens.com`.
+
+Do **not** reuse Skaldic’s deploy secrets — this stack has its own host and key pair.
+
+### First successful deploy prerequisites
+
+1. Server prepared with `scripts/setup-server.sh`
+2. Repo cloned at `/var/www/sidequest-kitchens` on `main`
+3. SSM parameters created under `/sidequest-kitchens/production/`
+4. DNS + TLS certs in place (health check hits HTTPS)
+5. Workflows merged to `main` and secrets configured
 
 ## Server directory
 
