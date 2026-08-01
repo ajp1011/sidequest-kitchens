@@ -1,9 +1,9 @@
-# Cursor Rules for Skaldic Codeworks - Laravel 12 + Vue 3 + Tailwind CSS
+# Cursor Rules for Sidequest Kitchens - Laravel 12 + Blade + Tailwind CSS
 
 ## Project Overview
-This is a software development company website built with:
+This is the Sidequest Kitchens website built with:
 - **Backend**: Laravel 12 with PHP 8.3+
-- **Frontend**: Vue 3 with Composition API + Tailwind CSS v4
+- **Frontend**: Blade templates with Vite + Tailwind CSS v4 (TypeScript entry for the asset pipeline)
 - **Styling**: Native CSS (no preprocessors) + Tailwind v4
 - **Testing**: PEST 4 for unit and feature tests
 - **Database**: MySQL
@@ -64,20 +64,17 @@ This is a software development company website built with:
 - Implement API versioning if needed
 - Use route caching in production
 
-## Vue 3 Frontend Rules
+## Frontend Rules
 
-### Component Structure
-- Use Composition API with `<script setup>`
-- Create reusable components following single responsibility
-- Use TypeScript for type safety
-- Implement proper prop validation
-- Use composables for shared logic
+### Templates
+- Prefer Blade views for server-rendered pages
+- Keep views lean; push business logic into Actions or controllers
+- Use layouts and partials for shared UI
 
-### State Management
-- Use Pinia for global state management
-- Keep component state local when possible
-- Use reactive refs and computed properties
-- Implement proper error handling
+### Assets
+- Use Vite for CSS/JS builds
+- Use TypeScript for the frontend entry when needed
+- Keep `resources/js` minimal unless interactivity requires more
 
 ### Styling
 - Use Tailwind CSS v4 utility classes
@@ -87,20 +84,12 @@ This is a software development company website built with:
 - Implement responsive design mobile-first
 - Use Tailwind v4's native CSS processing
 - Create component-specific CSS files when needed
-- Use CSS modules (.module.css) for scoped styles if required
-
-### API Integration
-- Use Axios for HTTP requests
-- Implement proper error handling
-- Use loading states for async operations
-- Cache API responses when appropriate
-- Implement proper TypeScript interfaces
 
 ## Testing with PEST 4
 
 ### Test Structure
 - Write comprehensive unit tests for all models and actions
-- Create feature tests for all API endpoints
+- Create feature tests for all pages and API endpoints
 - Use database transactions for test isolation
 - Mock external services and APIs
 - Test both success and failure scenarios
@@ -139,16 +128,14 @@ This is a software development company website built with:
 ### Server Configuration
 - Use Ubuntu LTS for EC2 instances
 - Implement proper security groups
-- Use RDS for MySQL database
-- Configure SSL certificates
+- Configure SSL certificates with Let's Encrypt
 - Implement proper backup strategies
 
 ### Application Deployment
-- Use Laravel Forge or similar for deployment
+- Use Docker Compose production stack (`docker-compose.prod.yml`)
 - Implement CI/CD pipelines
 - Use environment-specific configurations
 - Implement proper logging and monitoring
-- Use CDN for static assets
 
 ## File Organization
 
@@ -168,12 +155,8 @@ app/
 ### Frontend Structure
 ```
 resources/
-├── js/
-│   ├── components/    # Vue components
-│   ├── composables/   # Vue composables
-│   ├── stores/        # Pinia stores
-│   ├── types/         # TypeScript interfaces
-│   └── utils/         # Utility functions
+├── views/             # Blade templates
+├── js/                # Vite/TypeScript entry
 └── css/
     ├── app.css        # Main CSS file with Tailwind v4 import
     └── *.css          # Custom CSS files (no preprocessors)
@@ -195,18 +178,6 @@ resources/
 - **CSS-First Config**: Configure Tailwind through CSS, not JS config files
 - **Performance**: Take advantage of v4's improved build performance
 
-### CSS File Organization
-```
-resources/css/
-├── app.css                    # Main file with Tailwind import
-├── nordic-minimalism.css      # Custom design system styles
-├── components/                # Component-specific styles
-│   ├── welcome.css
-│   └── navigation.css
-└── utilities/                 # Utility CSS classes
-    └── animations.css
-```
-
 ### CSS Best Practices
 - Use semantic class names for custom components
 - Leverage Tailwind utilities for common patterns
@@ -225,11 +196,9 @@ resources/css/
 - Write self-documenting code
 
 ### JavaScript/TypeScript Standards
-- Use ESLint and Prettier
-- Follow Vue 3 best practices
-- Use TypeScript strict mode
-- Implement proper error boundaries
-- Use modern ES6+ features
+- Use TypeScript strict mode where TypeScript is used
+- Prefer modern ES6+ features
+- Keep client JS minimal unless the feature needs it
 
 ### Database Standards
 - Use proper indexing strategies
@@ -251,7 +220,6 @@ resources/css/
 - Sanitize user input
 - Implement proper XSS protection
 - Use HTTPS in production
-- Implement proper CORS policies
 - Validate data on both client and server
 
 ## Performance Optimization
@@ -264,8 +232,6 @@ resources/css/
 - Use background jobs for heavy operations
 
 ### Frontend Performance
-- Implement code splitting
-- Use lazy loading for components
 - Optimize images and assets
 - Use proper caching headers
 - Minimize bundle size
@@ -275,16 +241,8 @@ resources/css/
 ### Code Documentation
 - Write doc headers for all functions
 - Document complex business logic
-- Include examples in documentation
 - Keep documentation up to date
 - Use clear and concise language
-
-### API Documentation
-- Document all API endpoints
-- Include request/response examples
-- Document error codes and messages
-- Use OpenAPI/Swagger when appropriate
-- Keep API documentation current
 
 ## Git Workflow
 
@@ -293,14 +251,12 @@ resources/css/
 - Implement proper pull request reviews
 - Use conventional commit messages
 - Keep commits atomic and focused
-- Use proper branch protection rules
 
 ### Code Review Process
 - All code must be reviewed before merging
 - Ensure tests pass before review
 - Check for security vulnerabilities
 - Verify performance implications
-- Maintain code quality standards
 
 ## Environment Configuration
 
@@ -309,14 +265,12 @@ resources/css/
 - Configure proper environment variables
 - Use development-specific settings
 - Implement hot reloading
-- Use debug tools appropriately
 
 ### Production Environment
 - Use environment-specific configurations
 - Implement proper logging
 - Use production-optimized settings
 - Configure monitoring and alerting
-- Implement proper backup strategies
 
 ## Error Handling and Logging
 
@@ -325,14 +279,12 @@ resources/css/
 - Use custom exception classes
 - Log errors appropriately
 - Provide user-friendly error messages
-- Implement proper error recovery
 
 ### Logging Strategy
 - Use structured logging
 - Log important business events
 - Implement proper log rotation
 - Use appropriate log levels
-- Monitor log files for issues
 
 ## Monitoring and Maintenance
 
@@ -341,7 +293,6 @@ resources/css/
 - Monitor performance metrics
 - Track error rates
 - Monitor database performance
-- Use proper alerting
 
 ### Maintenance Tasks
 - Regular dependency updates

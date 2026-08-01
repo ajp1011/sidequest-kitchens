@@ -1,16 +1,12 @@
 # Sidequest Kitchens — production deployment
 
-This app runs on the same EC2 host as Skaldic Codeworks. Skaldic’s nginx terminates TLS on ports 80/443 and reverse-proxies `sidequestkitchens.com` traffic to the Sidequest stack (`sidequest-kitchens-nginx-prod` on the shared Docker network `skaldic-codeworks-prod`).
+This app is a standalone Docker stack on its own EC2 host. Nginx terminates TLS on ports 80/443 and serves the Laravel app directly.
 
 ## Prerequisites
 
-- Skaldic Codeworks production stack deployed at `/var/www/skaldic-codeworks` so the edge nginx config and Docker network exist.
-- Docker network name **`skaldic-codeworks-prod`** (pinned in Skaldic’s `docker-compose.prod.yml`). If you previously used a Compose-default prefixed network, redeploy Skaldic once after pulling that change so the named network is created, or create it manually to match before starting Sidequest.
-- DNS `A`/`AAAA` records for `sidequestkitchens.com`, `www.sidequestkitchens.com`, `sidequestfood.com`, and `www.sidequestfood.com` pointing at the EC2 instance.
-- TLS certificates on the host under `/etc/letsencrypt/live/` for:
-  - `sidequestkitchens.com`
-  - `sidequestfood.com`  
-  Use the same webroot ACME flow as Skaldic (`/.well-known/acme-challenge/` → `/var/www/certbot`) once the updated Skaldic nginx config is loaded.
+- Ubuntu LTS EC2 instance with Docker (see `scripts/setup-server.sh`).
+- DNS `A`/`AAAA` records for `sidequestkitchens.com`, `www.sidequestkitchens.com`, `sidequestfood.com`, and `www.sidequestfood.com` pointing at the instance.
+- TLS certificates under `/etc/letsencrypt/live/sidequestkitchens.com/` covering all four hostnames (SAN cert recommended).
 
 ## AWS Systems Manager Parameter Store
 
@@ -43,12 +39,36 @@ cd /var/www/sidequest-kitchens
 git clone <your-sidequest-repo-url> .
 ```
 
-## Deploy order
+## First-time TLS
 
-1. Pull Skaldic changes (including `docker/nginx/production.conf` and pinned `skaldic-codeworks-prod` network), run Skaldic `scripts/deploy.sh`, obtain TLS certs for Sidequest hostnames, reload nginx if needed.
-2. Start Sidequest once from `/var/www/sidequest-kitchens`: `bash scripts/deploy.sh` (or rely on GitHub Actions after pushing `main`).
+1. Point DNS at the server.
+2. Ensure `/var/www/certbot` exists and is writable by Certbot.
+3. Start the stack with HTTP-reachable nginx (or temporarily serve only the ACME location), then issue a SAN cert, for example:
 
-`sidequestfood.com` HTTP(S) is configured at the Skaldic edge to redirect to `https://sidequestkitchens.com`.
+```bash
+sudo certbot certonly --webroot -w /var/www/certbot \
+  -d sidequestkitchens.com \
+  -d www.sidequestkitchens.com \
+  -d sidequestfood.com \
+  -d www.sidequestfood.com
+```
+
+4. Confirm paths match `docker/nginx/production.conf` (`live/sidequestkitchens.com/`).
+5. Deploy with `bash scripts/deploy.sh`.
+
+`sidequestfood.com` redirects to `https://sidequestkitchens.com`.
+
+## Ongoing deploys
+
+From `/var/www/sidequest-kitchens`:
+
+```bash
+bash scripts/deploy.sh
+```
+
+Or push to `main` and rely on GitHub Actions.
+
+Certificate renewal: Certbot container renews periodically; host-side `scripts/renew-ssl.sh` can also reload nginx after renewals.
 
 ## Local development URLs
 

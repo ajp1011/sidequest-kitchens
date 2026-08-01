@@ -1,6 +1,6 @@
 # Sidequest Kitchens
 
-Laravel 12 application with Vite and Tailwind CSS v4 (asset pipeline only for now—the landing page is plain HTML). Production runs in Docker on the same EC2 host as Skaldic Codeworks; Skaldic’s nginx terminates TLS and reverse-proxies this stack.
+Laravel 12 application with Vite and Tailwind CSS v4 (asset pipeline only for now—the landing page is plain HTML). Production runs as a standalone Docker stack with nginx terminating TLS.
 
 ## Tech stack
 
@@ -20,4 +20,4 @@ See [DOCKER.md](DOCKER.md). Summary:
 
 ## Production
 
-See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for Parameter Store paths, GitHub environment secrets, TLS, and deploy order alongside Skaldic.
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for Parameter Store paths, GitHub environment secrets, TLS, and deploy steps.

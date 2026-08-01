@@ -169,3 +169,23 @@ cat << 'EOF' | sudo tee /etc/logrotate.d/sidequest-kitchens
 }
 EOF
 
+# Certbot webroot for ACME challenges
+echo "Creating Certbot webroot..."
+sudo mkdir -p /var/www/certbot
+sudo chown -R ubuntu:ubuntu /var/www/certbot
+echo "✓ Certbot webroot ready at /var/www/certbot"
+
+# Install Certbot (package includes twice-daily renewal timer/cron)
+echo "Installing Certbot for SSL renewal..."
+sudo apt-get install -y certbot
+
+# Deploy hook: reload nginx when a cert is renewed
+echo "Installing certbot deploy hook to reload nginx after renewal..."
+sudo mkdir -p /etc/letsencrypt/renewal-hooks/deploy
+sudo tee /etc/letsencrypt/renewal-hooks/deploy/nginx-reload.sh > /dev/null << 'HOOKSCRIPT'
+#!/bin/bash
+docker exec sidequest-kitchens-nginx-prod nginx -s reload
+HOOKSCRIPT
+sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/nginx-reload.sh
+echo "✓ Certbot deploy hook installed (nginx reloads after each renewal)"
+
