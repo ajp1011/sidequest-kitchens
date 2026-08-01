@@ -1,0 +1,83 @@
+services:
+  ensure-local-proxy:
+    image: docker:27-cli
+    working_dir: /proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../local-dev-proxy:/proxy
+    entrypoint: ["/bin/sh", "/proxy/ensure-up.sh"]
+    restart: "no"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sidequest-kitchens
+    container_name: sidequest-kitchens-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    user: "developer:developer"
+    networks:
+      - sidequest-kitchens
+
+  laravel.test:
+    extends:
+      service: app
+    container_name: sidequest-kitchens-laravel-test
+
+  nginx:
+    image: nginx:alpine
+    container_name: sidequest-kitchens-nginx
+    restart: unless-stopped
+    ports:
+      - "8001:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - sidequest-kitchens
+    depends_on:
+      - ensure-local-proxy
+
+  db:
+    image: mysql:8.0
+    container_name: sidequest-kitchens-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: sidequest_kitchens
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: password
+      MYSQL_USER: laravel
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - sidequest-kitchens
+
+  node:
+    image: node:20-alpine
+    container_name: sidequest-kitchens-node
+    working_dir: /var/www
+    user: "1000:1000"
+    volumes:
+      - ./:/var/www
+      - ../local-dev-proxy/certs:/certs:ro
+    command: sh -c "npm install && npm run build && npm run dev -- --host 0.0.0.0 --port 5173"
+    ports:
+      - "5174:5173"
+    networks:
+      - sidequest-kitchens
+    depends_on:
+      - ensure-local-proxy
+
+volumes:
+  dbdata:
+    driver: local
+
+networks:
+  sidequest-kitchens:
+    driver: bridge
