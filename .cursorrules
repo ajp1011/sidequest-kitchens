@@ -1,0 +1,304 @@
+# Cursor Rules for Sidequest Kitchens - Laravel 12 + Blade + Tailwind CSS
+
+## Project Overview
+This is the Sidequest Kitchens website built with:
+- **Backend**: Laravel 12 with PHP 8.3+
+- **Frontend**: Blade templates with Vite + Tailwind CSS v4 (TypeScript entry for the asset pipeline)
+- **Styling**: Native CSS (no preprocessors) + Tailwind v4
+- **Testing**: PEST 4 for unit and feature tests
+- **Database**: MySQL
+- **Hosting**: AWS EC2
+- **Development**: Docker containerized environment
+
+## Core Development Principles
+
+### Architecture Patterns
+- **Primary Pattern**: Action Executor pattern wherever possible
+- **Avoid**: Service classes unless strictly necessary
+- **Follow**: DRY (Don't Repeat Yourself) and SOLID principles
+- **Testing**: All unit and feature tests must be fully built and passing
+
+### Code Style Guidelines
+- **Comments**: Keep to minimum, no emojis in comments or documentation
+- **Documentation**: Create doc headers for all functions within models and controllers
+- **Formatting**: Follow PSR-12 coding standards
+- **Type Hints**: Use strict typing with PHP 8.3+ features
+
+## Laravel 12 Specific Rules
+
+### Controllers
+- Use single-action controllers when possible
+- Implement Action Executor pattern for complex business logic
+- Always include doc headers for all methods
+- Use resource controllers for CRUD operations
+- Return JSON responses for API endpoints
+- Use Form Request classes for validation
+
+### Models
+- Use Eloquent models with proper relationships
+- Implement accessors and mutators when needed
+- Add doc headers for all methods
+- Use model factories for testing
+- Implement soft deletes when appropriate
+- Use model events sparingly
+
+### Actions (Action Executor Pattern)
+- Create dedicated Action classes for complex business logic
+- Actions should be single-purpose and testable
+- Use dependency injection for dependencies
+- Return consistent response objects
+- Include comprehensive doc headers
+
+### Database
+- Use migrations for all schema changes
+- Create seeders for development data
+- Use model factories for test data
+- Implement proper foreign key constraints
+- Use database transactions for complex operations
+- Use PHP enum classes instead of database enums for better type safety and maintainability
+
+### Routes
+- Use route model binding
+- Group related routes with middleware
+- Use named routes consistently
+- Implement API versioning if needed
+- Use route caching in production
+
+## Frontend Rules
+
+### Templates
+- Prefer Blade views for server-rendered pages
+- Keep views lean; push business logic into Actions or controllers
+- Use layouts and partials for shared UI
+
+### Assets
+- Use Vite for CSS/JS builds
+- Use TypeScript for the frontend entry when needed
+- Keep `resources/js` minimal unless interactivity requires more
+
+### Styling
+- Use Tailwind CSS v4 utility classes
+- Write custom styles in native CSS (NO preprocessors like SCSS/Sass)
+- Use CSS custom properties (variables) for theming
+- Import custom CSS files in app.css using @import
+- Implement responsive design mobile-first
+- Use Tailwind v4's native CSS processing
+- Create component-specific CSS files when needed
+
+## Testing with PEST 4
+
+### Test Structure
+- Write comprehensive unit tests for all models and actions
+- Create feature tests for all pages and API endpoints
+- Use database transactions for test isolation
+- Mock external services and APIs
+- Test both success and failure scenarios
+
+### Test Organization
+- Group tests by functionality
+- Use descriptive test names
+- Implement proper setup and teardown
+- Use factories for test data
+- Test edge cases and error conditions
+
+### Coverage Requirements
+- Maintain 100% test coverage for critical business logic
+- Test all public methods
+- Include integration tests for complex workflows
+- Test API responses and error handling
+
+## Docker Development Environment
+
+### Container Configuration
+- Use multi-stage builds for optimization
+- Implement proper health checks
+- Use volume mounts for development
+- Configure proper networking between services
+- Use environment variables for configuration
+
+### Development Workflow
+- Use docker-compose for local development
+- Implement hot reloading for frontend
+- Use database migrations in containers
+- Configure proper logging
+- Use development-specific configurations
+
+## AWS EC2 Deployment
+
+### Server Configuration
+- Use Ubuntu LTS for EC2 instances
+- Implement proper security groups
+- Configure SSL certificates with Let's Encrypt
+- Implement proper backup strategies
+
+### Application Deployment
+- Use Docker Compose production stack (`docker-compose.prod.yml`)
+- Implement CI/CD pipelines
+- Use environment-specific configurations
+- Implement proper logging and monitoring
+
+## File Organization
+
+### Backend Structure
+```
+app/
+├── Actions/           # Action Executor pattern classes
+├── Http/
+│   ├── Controllers/   # Single-action controllers
+│   ├── Requests/      # Form request validation
+│   └── Middleware/    # Custom middleware
+├── Models/            # Eloquent models
+├── Services/          # Only when absolutely necessary
+└── Support/           # Helper classes
+```
+
+### Frontend Structure
+```
+resources/
+├── views/             # Blade templates
+├── js/                # Vite/TypeScript entry
+└── css/
+    ├── app.css        # Main CSS file with Tailwind v4 import
+    └── *.css          # Custom CSS files (no preprocessors)
+```
+
+## CSS and Tailwind v4 Guidelines
+
+### CSS Architecture
+- **NO preprocessors**: Do not use SCSS, Sass, Less, or any CSS preprocessors
+- **Native CSS only**: Write all custom styles in standard CSS
+- **CSS Custom Properties**: Use :root variables for theming and configuration
+- **Modular CSS**: Create separate CSS files for different components/features
+- **Import Strategy**: Use @import in app.css to include custom CSS files
+
+### Tailwind v4 Specific Rules
+- **Single Import**: Use `@import 'tailwindcss';` in app.css (v4 syntax)
+- **Content Detection**: Use @source directives instead of content arrays
+- **Vite Integration**: Leverage Tailwind v4's native Vite plugin
+- **CSS-First Config**: Configure Tailwind through CSS, not JS config files
+- **Performance**: Take advantage of v4's improved build performance
+
+### CSS Best Practices
+- Use semantic class names for custom components
+- Leverage Tailwind utilities for common patterns
+- Use CSS custom properties for dynamic theming
+- Implement responsive design with CSS media queries
+- Use CSS Grid and Flexbox for layouts
+- Optimize for performance with efficient selectors
+
+## Code Quality Standards
+
+### PHP Standards
+- Follow PSR-12 coding standards
+- Use PHP 8.4+ features (enums, readonly properties, etc.)
+- Implement proper error handling
+- Use dependency injection
+- Write self-documenting code
+
+### JavaScript/TypeScript Standards
+- Use TypeScript strict mode where TypeScript is used
+- Prefer modern ES6+ features
+- Keep client JS minimal unless the feature needs it
+
+### Database Standards
+- Use proper indexing strategies
+- Implement database constraints
+- Use migrations for all changes
+- Optimize queries for performance
+- Use proper naming conventions
+
+## Security Considerations
+
+### Backend Security
+- Implement proper authentication and authorization
+- Use CSRF protection
+- Validate all input data
+- Implement rate limiting
+- Use secure session handling
+
+### Frontend Security
+- Sanitize user input
+- Implement proper XSS protection
+- Use HTTPS in production
+- Validate data on both client and server
+
+## Performance Optimization
+
+### Backend Performance
+- Use database query optimization
+- Implement proper caching strategies
+- Use eager loading for relationships
+- Optimize API responses
+- Use background jobs for heavy operations
+
+### Frontend Performance
+- Optimize images and assets
+- Use proper caching headers
+- Minimize bundle size
+
+## Documentation Requirements
+
+### Code Documentation
+- Write doc headers for all functions
+- Document complex business logic
+- Keep documentation up to date
+- Use clear and concise language
+
+## Git Workflow
+
+### Branch Strategy
+- Use feature branches for new features
+- Implement proper pull request reviews
+- Use conventional commit messages
+- Keep commits atomic and focused
+
+### Code Review Process
+- All code must be reviewed before merging
+- Ensure tests pass before review
+- Check for security vulnerabilities
+- Verify performance implications
+
+## Environment Configuration
+
+### Development Environment
+- Use Docker for consistent environments
+- Configure proper environment variables
+- Use development-specific settings
+- Implement hot reloading
+
+### Production Environment
+- Use environment-specific configurations
+- Implement proper logging
+- Use production-optimized settings
+- Configure monitoring and alerting
+
+## Error Handling and Logging
+
+### Error Handling
+- Implement proper exception handling
+- Use custom exception classes
+- Log errors appropriately
+- Provide user-friendly error messages
+
+### Logging Strategy
+- Use structured logging
+- Log important business events
+- Implement proper log rotation
+- Use appropriate log levels
+
+## Monitoring and Maintenance
+
+### Application Monitoring
+- Implement health checks
+- Monitor performance metrics
+- Track error rates
+- Monitor database performance
+
+### Maintenance Tasks
+- Regular dependency updates
+- Database maintenance
+- Log file cleanup
+- Performance optimization
+- Security updates
+
+Remember: Always prioritize code quality, test coverage, and maintainability. Follow the Action Executor pattern, avoid unnecessary service classes, and ensure all tests are comprehensive and passing.

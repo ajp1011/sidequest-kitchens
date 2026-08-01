@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
+
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+
+@theme {
+    --font-display: 'Cinzel', ui-serif, Georgia, serif;
+    --font-body: 'Crimson Pro', ui-serif, Georgia, serif;
+    --color-parchment: #e8dcc8;
+    --color-parchment-dark: #d4c4a8;
+    --color-stone-deep: #8b7355;
+    --color-wood-dark: #3d2b1f;
+    --color-wood-mid: #5c4033;
+    --color-ivy: #4a5d23;
+    --color-ivy-bright: #6b8c3e;
+    --color-brass: #c9a227;
+    --color-iron: #1a1512;
+}
+
+@layer components {
+    .sq-panel {
+        @apply rounded-lg border-4 border-double border-stone-deep/80 bg-parchment/95 px-6 py-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_12px_40px_rgba(26,21,18,0.45)];
+    }
+
+    .sq-nav-link {
+        @apply font-display text-sm font-semibold uppercase tracking-[0.2em] text-parchment/90 transition-colors hover:text-brass;
+    }
+
+    .sq-nav-link-active {
+        @apply text-brass underline decoration-brass decoration-2 underline-offset-4;
+    }
+
+    .sq-heading {
+        @apply font-display font-bold tracking-wide text-wood-dark;
+    }
+
+    .sq-divider {
+        @apply mx-auto h-px max-w-xs bg-gradient-to-r from-transparent via-stone-deep to-transparent;
+    }
+}
