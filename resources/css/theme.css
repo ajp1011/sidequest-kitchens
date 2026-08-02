@@ -1,0 +1,37 @@
+/**
+ * SideQuest Kitchens — theme tokens
+ *
+ * Tweak hex values here, then reload to compare. Tailwind picks these up as
+ * utilities (e.g. bg-page, bg-header, text-burgundy).
+ */
+
+@theme {
+    /* ------------------------------------------------------------------ */
+    /* Layout surfaces — primary places to experiment                     */
+    /* ------------------------------------------------------------------ */
+    --color-page: #F5EFE3; /* warm parchment — main page background */
+    --color-header: #7B2836; /* burgundy — site header */
+    --color-footer: #5A3B28; /* hearth brown — site footer */
+    --color-panel: #FFFCFA; /* content panels sitting on page */
+
+    /* ------------------------------------------------------------------ */
+    /* Brand palette                                                      */
+    /* ------------------------------------------------------------------ */
+    --color-parchment: #F5EFE3;
+    --color-parchment-dark: #d4c4a8;
+    --color-burgundy: #7B2836;
+    --color-hearth: #5A3B28;
+    --color-stone-deep: #8b7355;
+    --color-wood-dark: #3d2b1f;
+    --color-wood-mid: #5c4033;
+    --color-ivy: #4a5d23;
+    --color-ivy-bright: #6b8c3e;
+    --color-brass: #C9A348;
+    --color-iron: #1a1512;
+
+    /* ------------------------------------------------------------------ */
+    /* Typography                                                         */
+    /* ------------------------------------------------------------------ */
+    --font-display: 'Cinzel', ui-serif, Georgia, serif;
+    --font-body: 'Lato', ui-sans-serif, system-ui, sans-serif;
+}

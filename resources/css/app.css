@@ -1,28 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:ital,wght@0,400;0,700;1,400&display=swap');
 
 @import 'tailwindcss';
+@import './theme.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 
-@theme {
-    --font-display: 'Cinzel', ui-serif, Georgia, serif;
-    --font-body: 'Crimson Pro', ui-serif, Georgia, serif;
-    --color-parchment: #e8dcc8;
-    --color-parchment-dark: #d4c4a8;
-    --color-stone-deep: #8b7355;
-    --color-wood-dark: #3d2b1f;
-    --color-wood-mid: #5c4033;
-    --color-ivy: #4a5d23;
-    --color-ivy-bright: #6b8c3e;
-    --color-brass: #c9a227;
-    --color-iron: #1a1512;
-}
-
 @layer components {
     .sq-panel {
-        @apply rounded-lg border-4 border-double border-stone-deep/80 bg-parchment/95 px-6 py-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_12px_40px_rgba(26,21,18,0.45)];
+        @apply rounded-lg border-4 border-double border-stone-deep/80 bg-panel px-6 py-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_12px_40px_rgba(26,21,18,0.12)];
     }
 
     .sq-nav-link {
