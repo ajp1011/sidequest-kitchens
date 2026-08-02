@@ -64,7 +64,8 @@ MAIL_FROM_ADDRESS="hello@sidequestkitchens.com"
 MAIL_FROM_NAME="\${APP_NAME}"
 EOF
 
-chmod 600 .env
+# Readable by www-data inside the app container (.env is bind-mounted)
+chmod 644 .env
 echo "Secrets fetched and .env created"
 
 echo "Stopping existing containers..."
@@ -83,8 +84,21 @@ docker compose -f docker-compose.prod.yml exec -u root -T app mkdir -p \
     /var/www/storage/framework/cache/data \
     /var/www/storage/logs
 
+echo "Clearing stale config cache (volume may retain a previous empty APP_KEY)..."
+docker compose -f docker-compose.prod.yml exec -T app php artisan config:clear
+
 echo "Waiting for database..."
-sleep 10
+for i in $(seq 1 30); do
+    if docker compose -f docker-compose.prod.yml exec -T db mysqladmin ping -h 127.0.0.1 -uroot -p"${DB_ROOT_PASSWORD}" --silent 2>/dev/null; then
+        echo "Database is ready"
+        break
+    fi
+    if [ "$i" -eq 30 ]; then
+        echo "Database did not become ready in time"
+        exit 1
+    fi
+    sleep 2
+done
 
 echo "Running migrations..."
 docker compose -f docker-compose.prod.yml exec -T app php artisan migrate --force
@@ -94,13 +108,18 @@ docker compose -f docker-compose.prod.yml exec -T app php artisan config:cache
 docker compose -f docker-compose.prod.yml exec -T app php artisan route:cache
 docker compose -f docker-compose.prod.yml exec -T app php artisan view:cache
 
+# PHP-FPM may have already loaded bootstrap/cache/config.php into memory
+echo "Restarting app so PHP-FPM picks up the new config cache..."
+docker compose -f docker-compose.prod.yml restart app
+sleep 3
+
 echo "Setting permissions..."
-docker compose -f docker-compose.prod.yml exec -T app chown -R www-data:www-data /var/www/storage
-docker compose -f docker-compose.prod.yml exec -T app chmod -R 775 /var/www/storage
+docker compose -f docker-compose.prod.yml exec -u root -T app chown -R www-data:www-data /var/www/storage
+docker compose -f docker-compose.prod.yml exec -u root -T app chmod -R 775 /var/www/storage
 
 echo "Running health check..."
 sleep 5
-if docker compose -f docker-compose.prod.yml exec -T nginx wget -q -O- http://127.0.0.1/ >/dev/null 2>&1; then
+if docker compose -f docker-compose.prod.yml exec -T nginx wget --no-check-certificate -q -O- https://127.0.0.1/ >/dev/null 2>&1; then
     echo "Application is responding"
 else
     echo "Warning: Application may not be responding properly"
