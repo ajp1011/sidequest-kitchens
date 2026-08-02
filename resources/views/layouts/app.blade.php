@@ -9,10 +9,10 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     @vite(['resources/css/app.css', 'resources/js/app.ts'])
 </head>
-<body class="min-h-screen bg-iron bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-wood-mid via-wood-dark to-iron font-body text-wood-dark antialiased">
+<body class="flex min-h-screen flex-col bg-page font-body text-wood-dark antialiased">
     <div class="pointer-events-none fixed inset-0 opacity-[0.07]" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E');" aria-hidden="true"></div>
 
-    <header class="relative z-10 border-b-4 border-double border-stone-deep/60 bg-gradient-to-b from-wood-dark to-wood-mid shadow-lg">
+    <header class="relative z-10 border-b-4 border-double border-stone-deep/60 bg-header shadow-lg">
         <div class="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 py-8 md:flex-row md:justify-between md:gap-8 md:py-6">
             <a href="{{ route('home') }}" class="group flex flex-col items-center gap-3 md:flex-row md:gap-5">
                 <img
@@ -27,16 +27,17 @@
             <nav aria-label="Primary" class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
                 <a href="{{ route('home') }}" class="sq-nav-link {{ request()->routeIs('home') ? 'sq-nav-link-active' : '' }}">Home</a>
                 <a href="{{ route('menus') }}" class="sq-nav-link {{ request()->routeIs('menus') ? 'sq-nav-link-active' : '' }}">Menus</a>
+                <a href="{{ route('order') }}" class="sq-nav-link {{ request()->routeIs('order') ? 'sq-nav-link-active' : '' }}">Order</a>
                 <a href="{{ route('about') }}" class="sq-nav-link {{ request()->routeIs('about') ? 'sq-nav-link-active' : '' }}">About</a>
             </nav>
         </div>
     </header>
 
-    <main class="relative z-10 mx-auto max-w-5xl px-4 py-12 md:py-16">
+    <main class="relative z-10 mx-auto w-full max-w-5xl flex-1 px-4 py-12 md:py-16">
         @yield('content')
     </main>
 
-    <footer class="relative z-10 border-t-4 border-double border-stone-deep/40 bg-wood-dark/90 py-8 text-center text-sm text-parchment/75">
+    <footer class="relative z-10 mt-auto border-t-4 border-double border-stone-deep/40 bg-footer py-8 text-center text-sm text-parchment/75">
         <p class="font-display tracking-wide">&copy; {{ date('Y') }} SideQuest Kitchens</p>
         <p class="mt-1 font-body italic text-parchment/60">Chef Holly McGrath — fantasy-inspired catering</p>
     </footer>
